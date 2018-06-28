@@ -136,3 +136,41 @@
         duplex full
       ```
   * ![Completion of Step 2](images/step2Completion.png)
+
+### Step 3: Enabling RIPv2 Routing
+
+* Configure RIPv2 through the Network Environment
+* ```text
+  Router 1 Config
+    sh ip int br
+    conf t
+      router rip
+        version 2
+        no auto-summary
+        network 10.0.0.0
+  Router 2
+    sh ip int br
+    conf t
+      router rip
+        version 2
+        no auto-summary
+        network 10.0.0.0
+  Router 3
+    sh ip int br
+      conf t
+        routing rip
+          version 2
+          no suto-summary
+          network 10.0.0.0
+          passive-int f0/0
+
+          | Alternative way to turn off RIP Routing on the interfaces
+          | Cisco Prefered Method, It tends to be more secure
+          | passive-interface default
+          | no passive-interface s1/0
+  Switches
+    conf t
+      ip default-gateway 10.24.0.1
+      no ip routing | Must be done since these are routers with EtherSwitch Modules
+    ```
+  * At this point, you should be able to ping any device from anywhere in the Network.
