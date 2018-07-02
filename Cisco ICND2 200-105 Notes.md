@@ -174,3 +174,194 @@
       no ip routing | Must be done since these are routers with EtherSwitch Modules
     ```
   * At this point, you should be able to ping any device from anywhere in the Network.
+
+### Step 4: Static Routes, Default Routes
+
+* Configure Default Routes through the network environment
+* ```text
+  Router 1
+    sh ip int br
+    conf t
+      ip route 0.0.0.0 0.0.0.0 188.23.163.174
+      exit
+    sh ip route
+  ISP
+    sh ip int br
+    conf t
+      int l0
+        ip address 4.2.2.2 255.255.255.255
+        exit
+      int l1
+        ip address 8.8.8.8 255.255.255.255
+        exit
+  Router 2 (Static Route)
+    conf t
+      ip route 0.0.0.0 0.0.0.0 10.24.0.1
+      exit
+  Router 1 (RIP)
+    conf t
+      router rip
+        default-information originate
+    ```
+* 255.255.255.255 represents a host interface
+
+### Step 5: Trunking, VTP, and VLANs
+
+* Configure interwitch trunk links and user VLANs.
+* Trunk Configuration
+  * ```text
+    Switch 1
+      sh cdp neighbors
+      sh int f1/1 switchport
+      conf t
+        int f1/1
+          switchport mode trunk
+          exit
+        int f1/2
+          switchport mode trunk
+          exit
+        exit
+    Switch 2
+      conf t
+        int f1/0
+          switchport mode trunk
+          end
+    Switch 3
+      conf t
+        int f1/0
+          switchport mode trunk
+          end
+      ```
+* VLAN Configuration
+  * ```text
+    Switch 1
+      sh vtp status
+      conf t
+        vtp domain CBTNUGGETS
+        vtp mode transparent
+      vlan database
+        vlan 2 name IT
+        vlan 5 name ACCOUNTING
+        exit
+      sh vlan-switch
+      sh vtp status
+      conf t
+        int f1/1 - 2
+          switchport trunk allowed vlan 1-2,5,1002-1005
+          exit
+        exit
+    Switch 2
+      conf t
+        int f1/0
+          switchport trunk allowed vlan 1-2,5,1002-1005
+          end
+    Switch 3
+      conf t
+        int f1/0
+          switchport trunk allowed vlan 1-2,5,1002-1005
+          end
+    ```
+  * VLAN database: This has been deprecated, however is the only way to add VLANs in GNS3
+  * FLASH Disk needs to be added to the switches for them to work properly
+    * Right Click
+      * Configure
+      * Select the group
+        * Memories and disks
+          * PCMCIA Size :4Mb
+* ![Step 5 Diagram Changes](step5.png)
+
+### Step 6: Router on a stick and DHCP services
+
+* Configure Router on a Stick and Router DHCP Services
+  * ```text
+    Switch 1
+      conf t
+        int f1/0
+          switch mode trunk
+          exit
+    Router 1
+      conf t
+        int f0/0.2
+          encapsulation dot1q 2
+          ip address 10.24.2.1 255.255.255.0
+          exit
+        int f0/0.5
+          encapsulation dot1q 5
+          ip address 10.24.5.1 255.255.255.0
+          exit
+        ip dhcp excluded-address 10.24.2.1 10.24.2.99
+        ip dhcp excluded-address 10.24.2.151 10.24.2.255
+        ip dhcp excluded-address 10.24.5.1 10.24.5.99
+        ip dhcp excluded-address 10.24.5.151 10.24.5.255
+        ip dhcp pool IT
+          network 10.24.2.0 /24
+          dns-server 4.2.2.2 8.8.8.8
+          default-router 10.24.2.1
+          exit
+        do sh run | section dhcp
+        ip dhcp pool ACCOUNTING
+          network 10.24.5.0 /24
+          dns-server 4.2.2.2 8.8.8.8
+          default-router 10.24.5.1
+          exit
+        do sh run | section dhcp
+    ```
+  * Hook PCs to network
+    * ```text
+      PC A
+        conf t
+          no ip routing
+          int f0/0
+            no shut
+            ip address dhcp
+      PC-B
+        conf t
+          no ip routing
+          int f0/0
+            no shut
+            ip address dhcp
+      Switch 2
+        conf t
+          int f1/1
+            switchport mode access
+            switchport access vlan 2
+      Switch 3
+        conf t
+          int f1/1
+            switchport mode access
+            switchport access vlan 5
+      ```
+  * sh ip dhcp binding
+
+### Step 7: Network Address Translation
+
+* Configure Network Address Translation
+  * Add More memory to Router 1
+    * right click
+    * configure
+      * memory and disk
+      * RAM = 256
+  * ```text
+    Router 1
+      sh ip int br
+      conf t
+        int s1/0
+          ip nat outside
+          exit
+        do sh ip int br
+        int f0/0
+          ip nat inside
+        int f0/0.2
+          ip nat inside
+        int f0/0.5
+          ip nat inside
+          exit
+        ip access-list standard NATTABLE
+          permit 10.24.0.0 0.0.0.255
+          permit 10.24.2.0 0.0.0.255
+          permit 10.24.5.0 0.0.0.255
+          exit
+        ip nat inside source list NATTABLE interface s1/0 overload
+    ```
+  * sh ip nat translations
+* ![Step 7 Changes](step7.png)
