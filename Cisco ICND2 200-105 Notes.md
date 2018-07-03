@@ -268,7 +268,7 @@
       * Select the group
         * Memories and disks
           * PCMCIA Size :4Mb
-* ![Step 5 Diagram Changes](step5.png)
+* ![Step 5 Diagram Changes](images/step5.png)
 
 ### Step 6: Router on a stick and DHCP services
 
@@ -364,4 +364,4 @@
         ip nat inside source list NATTABLE interface s1/0 overload
     ```
   * sh ip nat translations
-* ![Step 7 Changes](step7.png)
+* ![Step 7 Changes](images/step7.png)
