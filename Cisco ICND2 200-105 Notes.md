@@ -365,3 +365,65 @@
     ```
   * sh ip nat translations
 * ![Step 7 Changes](images/step7.png)
+
+### Step 8: Standard Access Lists
+
+* Configure a Standard Access list for security
+* ```text
+  Router 2
+    conf t
+      ip access-list standard LIMIT_TELNET
+        permit 10.0.0.0 0.255.255.255
+        deny any
+      line vty 0 4
+        access-class LIMIT_TELNET in
+    ```
+* Copy and past those commands to the other switches, and test telnet using Router 1 Serial 1/0 interface. `telnet 10.24.0.2 /source-interface serial 1/0`
+
+## Rebuilding ICND 1 Conclusion
+
+* At this point the top level overview review from ICND 1 has been completed. From this point forward all material discussed will be directly related to ICND 2. All review configs can be found [here](../ICND\ 1\ Review\ Configs).
+
+## Spanning Tree Protocol
+
+### What Does STP Do
+
+* Fact: Redundancy is Good!
+  * Single Switch Connections mean single point of failure
+  * Simple to create redundant links
+  * Spanning tree loop
+  * ![Cisco Hierarchical Model](http://study-ccna.com/wp-content/uploads/2016/02/cisco_hierarchical_model.jpg)
+    * Layered Approach allows for easy, manageable growth
+    * Etherchannel can provide more bandwidth on key links
+    * Redundant connections eliminate a single point of failure
+* STP Technology Overview
+   1. Elect the Root
+   2. Find the best path to the root
+      * Lowest Cost
+        Link Bandwidth | Cost
+        :--- | ---
+        10Mbps | 100
+        100 Mbps | 19
+        1Gbps | 4
+        10Gbps | 1
+      * Lowest bridge id
+        * Priority Number
+      * Lowest Port Number
+   3. Block whatever is left over
+  * Understanding the Standards
+    * Common Spanning Tree (CST or STP - 802.1d)
+      * Created in 1993
+      * takes 30-50 seconds to remove the block, and rebuild the connectivity
+      * time based
+    * Per-VLOAN Spanning Tree (PVST)
+      * Cisco Proprietary
+    * Rapid Spanning Tree (RSTP - 802.1w)
+      * Takes 2 seconds to remove the block
+      * activity based
+      * Will inter operate with Common Spanning tree. 
+    * Per-VLAN Rapid Spanning Tree (PVRST)
+      * Cisco Proprietary
+    * Multiple Spanning Tree Protocol (MSTP - 802.1s)
+      * Took the Cisco Proprietary and improved upon it as an industry standard. 
+* What is the Root Bridge?
+* How does STP find the best way around?

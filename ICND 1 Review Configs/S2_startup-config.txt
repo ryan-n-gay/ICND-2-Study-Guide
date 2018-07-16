@@ -1,0 +1,180 @@
+!
+
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname S2
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$EM87$cNWEGTRnlPG8WmdV31oAP0
+!
+no aaa new-model
+memory-size iomem 5
+no ip routing
+no ip icmp rate-limit unreachable
+no ip cef
+!
+!
+!
+!
+no ip domain lookup
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+archive
+ log config
+  hidekeys
+! 
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+interface FastEthernet0/0
+ no ip address
+ no ip route-cache
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ no ip address
+ no ip route-cache
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet1/0
+ switchport trunk allowed vlan 1,2,5,1002-1005
+ switchport mode trunk
+ duplex full
+ speed 100
+!
+interface FastEthernet1/1
+ switchport access vlan 2
+ duplex full
+ speed 100
+!
+interface FastEthernet1/2
+ duplex full
+ speed 100
+!
+interface FastEthernet1/3
+!
+interface FastEthernet1/4
+!
+interface FastEthernet1/5
+!
+interface FastEthernet1/6
+!
+interface FastEthernet1/7
+!
+interface FastEthernet1/8
+!
+interface FastEthernet1/9
+!
+interface FastEthernet1/10
+!
+interface FastEthernet1/11
+!
+interface FastEthernet1/12
+!
+interface FastEthernet1/13
+!
+interface FastEthernet1/14
+!
+interface FastEthernet1/15
+!
+interface Vlan1
+ ip address 10.24.0.12 255.255.255.0
+ no ip route-cache
+!
+ip default-gateway 10.24.0.1
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ip access-list standard LIMIT_TELNET
+ permit 10.0.0.0 0.255.255.255
+ deny   any
+!
+no cdp log mismatch duplex
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+!
+banner motd 
+
+    ********************
+
+       DO NOT LOGIN IN
+
+    ********************
+
+    YOUR CHAIR WILL SINK
+
+    IN QUICKSAND QUICKLY
+
+    ********************
+
+    
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password NuggetLove
+ logging synchronous
+ login
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ access-class LIMIT_TELNET in
+ password NuggetLove
+ login
+!
+!
+end

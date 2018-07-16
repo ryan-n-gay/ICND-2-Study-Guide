@@ -1,0 +1,192 @@
+!
+
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$tspu$7CXLPnwyZvwWoIq7rT.oM/
+!
+no aaa new-model
+memory-size iomem 5
+no ip icmp rate-limit unreachable
+ip cef
+!
+!
+no ip dhcp use vrf connected
+ip dhcp excluded-address 10.24.2.1 10.24.2.99
+ip dhcp excluded-address 10.24.2.151 10.24.2.255
+ip dhcp excluded-address 10.24.5.1 10.24.5.99
+ip dhcp excluded-address 10.24.5.151 10.24.5.255
+!
+ip dhcp pool IT
+   network 10.24.2.0 255.255.255.0
+   dns-server 4.2.2.2 8.8.8.8 
+   default-router 10.24.2.1 
+!
+ip dhcp pool ACCOUNTING
+   network 10.24.5.0 255.255.255.0
+   dns-server 4.2.2.2 8.8.8.8 
+   default-router 10.24.5.1 
+!
+!
+no ip domain lookup
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+archive
+ log config
+  hidekeys
+! 
+!
+!
+!
+ip tcp synwait-time 5
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 10.24.0.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+ speed 100
+ full-duplex
+!
+interface FastEthernet0/0.2
+ encapsulation dot1Q 2
+ ip address 10.24.2.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/0.5
+ encapsulation dot1Q 5
+ ip address 10.24.5.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly
+!
+interface FastEthernet0/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial1/0
+ ip address 188.23.163.173 255.255.255.248
+ ip nat outside
+ ip virtual-reassembly
+ serial restart-delay 0
+!
+interface Serial1/1
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial1/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router rip
+ version 2
+ network 10.0.0.0
+ no auto-summary
+!
+ip forward-protocol nd
+ip route 0.0.0.0 0.0.0.0 188.23.163.174
+!
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list NATTABLE interface Serial1/0 overload
+!
+ip access-list standard LIMIT_TELNET
+ permit 10.0.0.0 0.255.255.255
+ deny   any
+ip access-list standard NATTABLE
+ permit 10.24.0.0 0.0.0.255
+ permit 10.24.2.0 0.0.0.255
+ permit 10.24.5.0 0.0.0.255
+!
+no cdp log mismatch duplex
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+!
+banner motd 
+
+********************
+
+   DO NOT LOGIN IN
+
+********************
+
+YOUR CHAIR WILL SINK
+
+IN QUICKSAND QUICKLY
+
+********************
+
+
+!
+line con 0
+ exec-timeout 0 0
+ privilege level 15
+ password NuggetLove
+ logging synchronous
+ login
+line aux 0
+ exec-timeout 0 0
+ privilege level 15
+ logging synchronous
+line vty 0 4
+ access-class LIMIT_TELNET in
+ password NuggetLove
+ logging synchronous
+ login
+!
+!
+end
