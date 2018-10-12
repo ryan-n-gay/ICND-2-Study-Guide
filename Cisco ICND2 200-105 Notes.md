@@ -486,15 +486,15 @@
            * Root - Port which the device uses to send traffic to the root bridge, not necessary connected to the root bridge
         3. Root Bridge
            * SW5 is the root bridge
-    3. Cause a Root Port outage; determin how long it takes to converge
+    3. Cause a Root Port outage; determine how long it takes to converge
         1. 30 Seconds
             1. STP - Listen (15 Seconds)
                * listening for BPDU
             2. STP - Learn (15 Seconds)
-               * learning mac addresses so it could learn what the nework looked like
+               * learning mac addresses so it could learn what the network looked like
     4. Change all switches to use RSTP test the outage again
         1. 2 Seconds
-            * Unlike Spanning tree which is passive, Rapid Spanning-tree is active, so it doesn't wait for the Listening and Learning Timers to exprie.
+            * Unlike Spanning tree which is passive, Rapid Spanning-tree is active, so it doesn't wait for the Listening and Learning Timers to expire
     5. Modify the bridge priority to elect SW1 as the Root Bridge, SW2 as the Backup Root: diagram port results and verify your assumptions are correct on the switch
         1. ![Updated Network Topology](images/STP_Elected_top.png)
 * Intentionally selecting the root bridge
@@ -550,7 +550,7 @@
     Gi1/0/4             Desg FWD 4         128.4    P2p
     Gi1/0/5             Root FWD 4         128.5    P2p
     ```
-* Commonality Between these two switchs
+* Commonality Between these two switches
   * Interface 5 is the root port for both devices
 * Switch 5
   * ```text
@@ -698,7 +698,7 @@
         Gi1/0/3             Desg FWD 4         128.3    P2p
         Gi1/0/4             Desg FWD 4         128.4    P2p
         Gi1/0/5             Desg BLK 4         128.5    P2p
-      ```
+        ```
   * Switch 5 (former root bridge)
     * ```text
       SW5#sh spanning-tree
@@ -721,3 +721,54 @@
         Gi1/0/1             Root FWD 4         128.1    P2p
         Gi1/0/2             Altn BLK 4         128.2    P2p
         ```
+
+### Portfast and BPDUGuard
+
+#### Configuring the STP " Option Features"
+
+1. Configure Portfast on all non-trunking ports of Dr. Evil
+2. Ensure Dr. Evil is indeed the STP reoot Bridge of the Network
+3. Protect Dr. Evil from other managed devices by correctly configuring BPDUGuard
+4. Ensure BPDUGuard is working correctly - connecrt Mini-Me to the network and ensure appropriate action is taken
+
+#### Configuration and Investigation
+
+* ```text
+  conf t
+    spanning-tree vlan 1 root primary
+    spanning-tree portfast
+    spanning-tree bpdugaurd enable
+    ```
+
+## Switch Services
+
+### Stacking and Chassis Aggregation
+
+* What is a Switch Stack?
+* Understanding the Benifits of Stacking
+  * Ciscos Stackwise
+    * Links the Switches Together, Physically and Logically
+    * Administer Multiple Switches as one
+    * Similar to a Chassis-Based Switch
+* Stacking: a Visual Inspection
+
+### Security at Layer 2
+
+* Locking Down Switchports: 802.1x
+  * The Security Mindset: Inside vs. Outside
+    * 802.1x focuses on the inside of the network by adding authentication to you network.
+      * **EAP** - the `Extendable Authentication Protocol`
+      * Rely on other things
+        * Domain Membership
+        * User Accounts
+        * Relies on server authentication
+  * The Goal of 802.1X
+  * The Concepts behind it: EAP, Radius/TACAS
+* DHCP Snooping
+  * Rouge DHCP: Simple Mistake or evil intent
+  * The Antidote: DHCP Snooping
+  * Managing Trust and Untrust
+* Non-Default VLANs
+  * Every Cisco switch does vlans out of the box
+  * Most organizations begin with VLAN 1
+  * Cisco Best Practive: No vlan 1 Anywhere, Especially on Trunk Connections
