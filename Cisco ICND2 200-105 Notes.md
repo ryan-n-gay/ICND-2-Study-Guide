@@ -727,9 +727,9 @@
 #### Configuring the STP " Option Features"
 
 1. Configure Portfast on all non-trunking ports of Dr. Evil
-2. Ensure Dr. Evil is indeed the STP reoot Bridge of the Network
+2. Ensure Dr. Evil is indeed the STP root Bridge of the Network
 3. Protect Dr. Evil from other managed devices by correctly configuring BPDUGuard
-4. Ensure BPDUGuard is working correctly - connecrt Mini-Me to the network and ensure appropriate action is taken
+4. Ensure BPDUGuard is working correctly - connect Mini-Me to the network and ensure appropriate action is taken
 
 #### Configuration and Investigation
 
@@ -745,8 +745,8 @@
 ### Stacking and Chassis Aggregation
 
 * What is a Switch Stack?
-* Understanding the Benifits of Stacking
-  * Ciscos Stackwise
+* Understanding the Benefits of Stacking
+  * Cisco's Stackwise
     * Links the Switches Together, Physically and Logically
     * Administer Multiple Switches as one
     * Similar to a Chassis-Based Switch
@@ -769,6 +769,115 @@
   * The Antidote: DHCP Snooping
   * Managing Trust and Untrust
 * Non-Default VLANs
-  * Every Cisco switch does vlans out of the box
+  * Every Cisco switch does VLANs out of the box
   * Most organizations begin with VLAN 1
-  * Cisco Best Practive: No vlan 1 Anywhere, Especially on Trunk Connections
+  * Cisco Best Practice: No vlan 1 Anywhere, Especially on Trunk Connections
+
+## Etherchannel
+
+### Etherchannel is Awesome
+
+* Bundling Instead of Blocking
+  * How would STP handle the following situation
+    * SPT would do the following
+      * ![STP Breakdown](image/STP_Situation.png)
+    * SPT would block the ports on the unused link to ensure no loop was created.
+  * Common EtherChange Options
+    * ![Etherchannel Bundling](image/Eth_Bundle.png)
+    * This Bundling takes Place at the **`ASIC`** level and allows for up to 8 connections to be bundled
+      * Allows for 8 cables to be connected
+      * Works best in groups of 2, 4, 8, not none binary numbers
+    * Allows for Load Balancing via:
+      * Mac Address
+      * IP Address
+      * TCP and UDP port number
+    * A Collapsed Core would be a valid use case for 8 cables
+      * Initially designed for directly connected switches only.
+    * LAG - Link Aggregation Group
+      * This can be used for servers, as well as many other devices not support this capability.
+      * ![Etherchannel Lag](images/Eth_Lag.png)
+  * There are two options for how to create Etherchannels
+    * First Option is using a negotiation protocol
+      * PAGP
+        * Cisco Proprietary
+        * Modes: On, Desirable, Auto
+          * Cisco Recommend configuring one switch as **Desirable**, and the other as **Auto**
+      * LACP
+        * Industry Standard
+        * Modes: On, Active, Passive
+          * Configure on as **Active** and the other as **Passive**
+    * Hard Coding
+      * Not recommended
+      * Could cause a spanning tree loop if not configured correctly.
+      * **On** - This indicates that the mode has been hardcoded
+* Configuration Steps
+  * Base interfaces must have identical configuration (Speed, Duplex, Mode, VLANs)
+  * Use the Channel-group command to create the etherchannel
+  * All Configuration done on the Virtual Port-Channel IInterface after bundling
+  * Best Verification: show etherchannel summary
+
+### Lab - Configuring Etherchannel Bundles of Joy
+
+* ![Lab Topology](images/Eth_Lab.png)
+* Configuring Etherchannel
+    1. Beginning with a base configuration, set all ports as access ports in VLAN 1
+    2. Configure Etherchannel on the interfaces between S2 and S3 using PAgP
+       * ```text
+          S2 commands
+          conf t
+            interface range g1/0/3-4
+              channel-group 2 mode desirable
+
+          S3 commands
+          conf t
+            interface range g1/0/1-2
+              channel-group 2 mode auto
+          ```
+    3. Configure Etherchannel on the interfaces between S1 and S2 using LACP
+       * ```text
+          S1
+          conf t
+            interface range g1/0/1-2
+              channel-group 1 mode active
+
+          S2
+          conf t
+            interface range g1/0/1-2
+              channel-group 1 mode passive
+          ```
+    4. Configure hardcoded Etherchannel on the interfaces between S1 and S3
+       * ```text
+          S1
+          conf t
+            interface range g1/0/3-4
+              channel-group 3 mode on
+
+          S2
+          conf t
+            interface range g1/0/3-4
+              channel-group 3 mode on
+          ```
+    5. Examine the configuration using show commands to verify Etherchannel works correctly
+    6. Misconfigure an interface in the PAgP/LACP bundle. What Happens?
+       * ```text
+           S2
+           conf t
+            interface g1/0/1
+              switchport mode trunk
+           ```
+       * Results `CANNOT_BUNDLE2: Gi1/0/1 is not compatible with Gi1/0/2 and will be suspended (dtp mode of Gi1/0/1 is on, Gi1/0/2 is off)`
+    7. Fix the issue. What happens now?
+       * ```text
+          no switchport mode trunk
+          shutdown
+          no shutdown
+         ```
+* Verifying It's working correctly
+
+## IOS Software
+
+### Fully Understanding the IOS Boot Process
+
+* Why alternate IOS locations can be good
+* The Function of the configuration Register
+* How to change IOS Boot Behavior
