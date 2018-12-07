@@ -879,5 +879,90 @@
 ### Fully Understanding the IOS Boot Process
 
 * Why alternate IOS locations can be good
+   1. Check the configuration Register
+       * 2100: ROMMON
+         * confreg
+         * tftpdnld/set
+         * xmodem
+       * 2101: RXBOOT
+       * 2102: Boot Normally
+       * 2142: Ignore NVRAM
+   2. Check for "Boot System" Commands in the Startup config
+      * Checks startup config for boot system commands
+      * can access a TFTP server
+      * Stored in NVRAM
+   3. Look for the first IOS Image in flash
+   4. Broadcast for a TFTP server
 * The Function of the configuration Register
+  * boot into RXBOOT and ROMMON
+  * Change forgotten password
 * How to change IOS Boot Behavior
+  * ```text
+    sh version
+    conf t
+      config-register 0x2100
+
+    sh flash
+    conf t
+      boot system flash://ios-version desired
+      boot system tftp://ios-version desired X.X.X.X
+    ```
+
+### Upgrading the IOS
+
+* Getting a New Version of the IOS
+* Setting up a TFTP Server
+* Performing the Backup of the old IOS/Install of a new IOS
+
+1. Access the device shown in the picture
+    * ![Lab Topology](images/IOS_Lab.png)
+2. Backup the IOS to the TFTP server shown
+    * ```text
+      conf t
+      hostname r1
+      int xx0/X
+      no shut
+      ip address 10.1.3.1 255.255.255.0
+      exit
+      sh ip int br
+      sh flash
+      copy flash tftp //follow prompt
+      copy running-config tftp //follow prompt
+      ```
+3. Backup both the running config to the TFTP server shown
+    * `copy running-config tftp //follow prompt`
+4. Restore bot the IOS and the running configuration to the router in the proper way.
+    * ```text
+      copy tftp startup-config //follow prompt
+      sh ver
+      copy tftp flash //follow prompt
+      reload```
+
+### Understanding IOS Licensing
+
+* The Old vs the New
+  * Before IOS Version 15 (12.X versions and prior), All-Inclusive IOS Features (Monolithic)
+    * IP Base
+    * IP Voice
+    * Adv. Security
+    * ENT. Base
+    * ADV IP Services
+    * ENT Services
+  * Post IOS Version 15, All Features in Image; Activated with License (Modular)
+    * IP Base
+    * Data (MPLS, ATM. Multi-Protocol)
+    * Unified Communication (VoIP)
+    * Security (Firewall, VPN, Encryption)
+* How to install a new license
+  * `license install`
+* How to see what Licenses are installed
+  * `sh license feature`
+
+## Core Routing
+
+### The Routing Table (DOES NOT) Revel All
+
+* Understanding the Victor's Circle
+  * `show ip route` - what do you see?
+* The Election Criteria
+  * Criteria that must be considered
