@@ -960,9 +960,49 @@
 
 ## Core Routing
 
-### The Routing Table (DOES NOT) Revel All
+### The Routing Table (DOES NOT) Reveal All
 
 * Understanding the Victor's Circle
   * `show ip route` - what do you see?
+  * ![Demonstration Diagram](images/Routing_Reveal.png)
+  * ![Packet Tracer](pktracer/Routing_Table_(does_not)_Reveal_All.pkt)
 * The Election Criteria
   * Criteria that must be considered
+      1. Next Hop
+      2. Route Specificity
+            * The Smaller the subnet, the more specific the route is, allowing it to take presence
+            * Floating Static Route
+      3. Administrative Distance
+            * Lower is better
+            * Routing protocol/Route source | Default Distance Values
+              :---|---
+              Connected interface | 0
+              Static route | 1
+              Enhanced Interior Gateway Routing Protocol (EIGRP) summary route | 5
+              External Border Gateway Protocol (eBGP) | 20
+              Internal EIGRP | 90
+              IGRP | 100
+              OSPF | 110
+              Intermediate System-to-Intermediate System (IS-IS) | 115
+              Routing Information Protocol (RIP) | 120
+              Exterior Gateway Protocol (EGP) | 140
+              On Demand Routing (ODR) | 160
+              External EIGRP | 170
+              Internal BGP | 200
+              Unknown | 255
+      4. Metric
+            * Hop Count - Lower is Better
+
+### Revisiting the Routing Protocols
+
+* Distance Vector vs Link State
+  * DV
+    * Only Knows What the neighbor tells it
+    * Memory/Processor Efficient
+    * Loop Prevention Mechanisms needed
+  * LS
+    * Maintains a map of the network system
+    * Resource Consuming
+    * Maintains Loop free by nature
+* Routing Protocol Flavors
+* Split Horizon: Stopping Loops, Stopping Continuity
