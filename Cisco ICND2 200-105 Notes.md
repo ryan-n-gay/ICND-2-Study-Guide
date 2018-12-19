@@ -997,12 +997,175 @@
 
 * Distance Vector vs Link State
   * DV
+    * Protocols
+      * RIP - Internal
+      * BGP - External
+      * EIGRP - Internal
     * Only Knows What the neighbor tells it
     * Memory/Processor Efficient
     * Loop Prevention Mechanisms needed
   * LS
+    * Protocols
+      * OSPF
+      * IS-IS
     * Maintains a map of the network system
     * Resource Consuming
     * Maintains Loop free by nature
 * Routing Protocol Flavors
 * Split Horizon: Stopping Loops, Stopping Continuity
+  * I will not send out an update on an interface I received the information on
+  * This causes issues in the some cases
+  * Solutions
+    * Disable Split Horizon
+    * Use sub-interfaces - Preferred Option
+* For Reference
+  * Triggered Updates
+  * Maximum Metric
+  * Route Poisoning
+
+## OSPF
+
+### Protocol Overview
+
+* OSPF Overview
+  * __Standards-Based__, **Link State** Interior Gateway Routing Protocol (Maintains LSDB)
+  * Designed for IPv4 (OSPFv2) and IPv6 (OSPFv3)
+  * Uses the Dijkstra SPF Algorithm
+  * Works for simple (single area) Networks and Advanced (Multi Area)
+    * Single Area - CCNA
+    * Multi Area - CCNP/IE
+  * Doesn't use UDP or TCP - Stands Alone
+* How OSPF works (Much Better than RIP)
+  * ![OSPF Diagram](images/ospf-overview.png)
+  * OSPF Area Design and Terms
+    * All Areas __must connect to area 0__
+    * All __Routers in an area__ have the same __topology table__
+    * Goal: Localize Updates within an area
+    * Requires a Hierarchical Design
+      * Summarization
+      * Autonomous System Boundary Router (ASBR)
+        * Partnering Company
+        * ISP
+
+### Neighbor Relationships
+
+* Phases of OSPF Neighbor Relationships
+* Packets: Hello, DBD, LSR, LSU, LSA, LSACK
+  * LSA - Link State Advertisement
+  * LSACK - Link State Acknowledgement
+* Understanding OSPF Neighbor Relationships
+    1. Determine your own Router ID
+          * The Router ID is Simply the Router's Name in the OSPF Process
+          * Highest Active Interface IP address when OSPF starts (Lookbacks beat physical interfaces)
+          * Can Be hard-coded using the __Router-ID__ command
+    2. Add Interfaces to the link state database (Dictated by the network command)
+    3. Send A Hello Message on chosen Interfaces
+          * Once Every 10 seconds on broadcast/P2P Networks
+          * Once Every 30 seconds on NBMA Networks
+          * Contains all sorts of information:
+            * Router ID
+            * Neighbors*
+            * Hello and Dead timers*
+            * Router Priority
+            * Network Mask*
+            * DR/BDR IP Addresses
+            * Area ID*
+            * Authentication Password*
+    4. Receive Hello
+          * Check Hello / Dead Interval
+          * Check Netmask
+          * Check Area ID
+          * Check Authentication Passwords
+    5. Send Reply Hello
+          * Am I listed as a neighbor in your hello packet?
+            * (if yes, reset dead timer)
+            * (if no, add as new neighbor)
+    6. Master - Slave Relationship Determined
+          * Determined by "Priority", Router-ID breaks tie
+          * Master Sends Database Description (DBD) packet
+             * DBD = Cliff Notes of link-state database
+          * Slave sends its DBD packet
+    7. DBDs are acknowledged and reviewed
+          * Slave requests details (Link State Request - LSR)
+          * Master sends updates (Link State Updates - LSU)
+          * Master requests details (LSR)
+          * Slave sends updates (LSU)
+    8. Neighbors are synchronized!
+          * **Full State**
+          * Now it's time to run the Dijkstra SPF algorithm to figure out what to do with all this data
+
+### The Roll of the DR and BDR
+
+* Understanding how OSPF processes updates
+* Understanding the full relationship fireworks show
+* How the DR and BDR remedy the issue
+  * DR Frequency 224.0.0.6
+  * BDR will take over if DR dies at the same frequency
+  * They send out the updated on 224.0.0.5 which is all OSPF Routers
+  * OSPF default priority 1
+    * If not changed, highest router ID will be elected
+    * `ip OSPF priority` - used to set an interface priority
+      * priority 0 will caused the interface to never be chosen as the DR/BDR
+      * Designated Router should be a hub, not a spoke connection
+      * Priotoity is set on a per-interface basis
+  * Point-2-Point Links
+    * There is no need for a Designated router on a point to point link since its P2P
+  * DR is only needed on a multi-access segment
+  * Does the priority matter?
+    * Maybe: depends on the type of network segment
+      * Cloud based network segments, it does matter where the DR and BDR are located.
+  * The Full Neighbor relationships only form between the connections to the DR and BDR devices
+    * 2-way connections are formed between everything else, **Friend-Zoned**
+
+### OSPF Lab
+
+#### Base Configuration
+
+* OSPF Network Configuration and verification
+* Gloss: DR Election, Timer Configuration, metric adjustment, passive networks
+* Configuration Focus
+    1. Configure all routers shown to operate in the backbone area. Hardcode Router IDs so they do not easily change
+          * Cisco Recommends being specific as possible
+          * Shoe Config Command - `network 10.1.3.1 0.0.0.0 area 0`
+          * sh ip protocols
+          * sh ip ospf neighbor
+          * debug ip ospf adj - allows you to watch the events form
+          * path
+            * Two-way
+            * ExStart
+            * Exchange
+            * LS Req (LSR)
+            * LS Upd (LSU)
+              * LSA
+            * Loading
+            * Full
+    2. Determine which router became the DR; elect "Tie" as the DR moving forward
+       * DR Election
+         * sh ip OSPF interface
+         * Point-to-point - No designated DR
+         * Broadcast _ Designated DR must be elected
+         * Default Priority = 1, leaving them to use the higher router-id
+           * The Higher the priority the better chance that router will be the DR
+         * `clear ip ospf process` - use to reset the DR/BDR/DOTHER
+         * Important for a Hub and Spoke network, especially for NBMA networks
+         * Use `Priority 0` to insure that if the DR goes down, that someone doesn't take his place
+    3. Adjust the metric of OSPF to function well with speeds up to 10G links
+          * OSPF uses Cost as Metric
+            * Cost = 100/BW
+              * BW = BandWidth in **mbps**
+          * Under an interface you can assign the cost
+            * ip ospf cost
+          * **`auto-cost reference-bandwidth 10000`**
+    4. Ensure "Shoe" does not form OSPF neighbors on its LAN network.
+          * `passive-interface _/_`
+          * `passive-interface default` - **Cisco Preferred Method**
+            * `no passive-interface _/_`
+    5. Adjust the Hello timer on "Sock" WAN interface to send Hello message 1/sec
+          * Go onto the interface you want to change
+            * `ip ospf hello-interval _`
+    6. Bonus: Create loopback interfaces in such a way that Router IDs are pingable from any router
+          * To do this you must create the loopback interface, and then assign the network for the OSPF network
+          * `int loopback 0`
+          * `ip address 4.4.4.4 255.255.255.255`
+          * `network 4.4.4.4 0.0.0.0 area 0`
+  * ![OSPF Base Configuration Lab](pktracer/OSPF_Base_Config.pkt)
