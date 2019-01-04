@@ -1169,3 +1169,33 @@
           * `ip address 4.4.4.4 255.255.255.255`
           * `network 4.4.4.4 0.0.0.0 area 0`
   * ![OSPF Base Configuration Lab](pktracer/OSPF_Base_Config.pkt)
+
+#### Troubleshooting Core OSPF
+
+* The Networks done gone off and blown up!
+  * Configuration Focus
+    * A Junior network administrator took care of things while you were on vacation and now the entire network is down.
+    * Troubleshoot the network such that all connectivity is restored and all routers are forming expected OSPF neighbor relationships.
+      * Duplicate Router IDs will cause a complete network outage
+        * Troubleshooting steps
+          * sh ip protocol
+          * sh ip route
+          * sh ip ospf neighbor
+          * sh ip ospf int
+          * sh run
+          * clear ip ospf process
+          * sh ip int brief
+          * debug ip ospf adj
+          * debug ip ospf packets
+            * `u all` - Stops all debugs
+            * Google! - you can find what each package are
+          * hello-timer
+            * sh run interface _/_
+          * sh run int _/_
+            * serial encapsulation
+              * HDLC - Default Encapsulation
+              * PPP - Industry Standard
+          * Mismatched area ID
+            * sh run | sec OSPF
+
+### Understanding Multiarea
