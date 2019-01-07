@@ -1198,4 +1198,30 @@
           * Mismatched area ID
             * sh run | sec OSPF
 
-### Understanding Multiarea
+#### Understanding Multiarea
+
+* Why we do multiarea designs in OSPF
+  * All Routers in an Area must have the same link state database
+  * Every Route, Every Change must be known
+  * The Larger the network, the more unruly the database becomes
+  * Area boundaries allow you to summarize
+* Reviewing the Terms and Roles
+  * Summarization - Summarizes the network routing table
+  * ABR - Area Border Router
+  * ASBR - Autonomous System Boundary Router
+    * Connects OSPF to and Outside Network
+  * Design Constraints
+    * All areas __**must**__ connect to area 0
+    * All Routers in an Area have the same topology table
+    * Goal: Localize Updates within an Area
+    * Requires a Hierarchical Design
+    * Virtual Link - The Band-Aid
+
+#### MultiArea OSPF Lab
+
+* Implement a Multiarea OSPF Network
+    1. Configure all routers shown to operate in a multiarea configuration. Tie, Belt, and Sock will act as ABRs.
+    2. Add five (5) loopback interfaces to ring, Hat, and Shoe. They should be contiguous to existing area subnets.
+    3. Add an Efficient summary route to area 1, 2, and 51. Verify impact on the routing table of other routers.
+    4. Add a lookback interface to Belt with the IP address 184.51.1.1. This will simulate and Internet connection
+    5. Have Belt Advertise the default route to the other routers via OSPF. The route should exist even if Belt does not have the default route.
