@@ -1025,7 +1025,7 @@
 
 ## OSPF
 
-### Protocol Overview
+### OSPF Protocol Overview
 
 * OSPF Overview
   * __Standards-Based__, **Link State** Interior Gateway Routing Protocol (Maintains LSDB)
@@ -1119,7 +1119,7 @@
 
 ### OSPF Lab
 
-#### Base Configuration
+#### OSPF Base Configuration
 
 * OSPF Network Configuration and verification
 * Gloss: DR Election, Timer Configuration, metric adjustment, passive networks
@@ -1220,8 +1220,95 @@
 #### MultiArea OSPF Lab
 
 * Implement a Multiarea OSPF Network
+* ![OSPF MultiArea Network Topology](images/ospf-multiarea.png)
     1. Configure all routers shown to operate in a multiarea configuration. Tie, Belt, and Sock will act as ABRs.
     2. Add five (5) loopback interfaces to ring, Hat, and Shoe. They should be contiguous to existing area subnets.
     3. Add an Efficient summary route to area 1, 2, and 51. Verify impact on the routing table of other routers.
     4. Add a lookback interface to Belt with the IP address 184.51.1.1. This will simulate and Internet connection
     5. Have Belt Advertise the default route to the other routers via OSPF. The route should exist even if Belt does not have the default route.
+* ![OSPF MultiArea Network Packet Tracer](pktracer/OSPF_MultiArea_Config.pkt)
+
+## EIGRP
+
+### EIGRP Protocol Overview
+
+* OSPF vs EIGRP
+  * OSPF
+    * Link State Protocol
+    * Maintains and shares the full routing table
+    * Large Overhead
+    * SPF - Shortest Path First Algorithm
+  * EIGRP
+    * Advanced Distance Vector Protocol
+    * Shares Partial pieces of the routing table
+    * Backup Routes instead of Routing Database
+    * Dual - Defused Update Algorithm
+    * Topology Table instead of Link State table
+  * Why you would choose to Use EIGRP
+    1. Backup Routes (Fast Convergence / Dual)
+    2. Simple Configuration
+    3. Flexibility in Summarization
+    4. Unequal Cost Load-Balancing
+    5. Combines Best of Distance Vector and Link State (Limited Routing Information, but backup paths)
+* The Unique Terms of EIGRP
+  * EIGRP Tables and Terminology
+    * A Router Running EIGRP maintains Three Tables:
+      * Neighbor Table
+      * Topology Table
+        * Closest think to Link State Database
+        * Successor
+        * Feasible Successor
+      * Routing Table
+        * Best of the Best Routes
+        * LoadBalancing Equal and Unequal
+    * Feasible Distance (FD)
+      * How Far it is from your router to get to a network
+    * Advertised Distance (AD)
+      * How far it is from the router who told you about this route
+    * Successor
+      * Primary in Topology Table
+      * Makes it to the Routing Table
+    * Feasible Successor
+      * Secondary in Topology Table
+      * Not in Routing Table unless it is promoted to Successor in the event of an outage.
+    * Active Route
+      * Router is trying to find a backup
+      * Sending out Query Messages
+    * Passive Route
+      * Everything is A-Okay.
+      * This is what you want
+* The Rule of Feasible Successor-ness
+  * To Be Considered a feasible successor, the **AD** must be less than the **FD** of the Successor
+    * Loop Prevention Mechanism
+
+### Neighbors and Metric
+
+* The Neighbor Language of EIGRP
+  * Visiting the Friendly EIGRP Neighborhood
+    * Hello: Forms Relationship
+    * Update: Sends Updates
+    * Query: Asks about Routes
+    * Reply: Response to a Query
+    * Ack: Acknowledges the update, query, and reply messages
+* Becoming and EIGRP K-Value Nerd
+  * Understanding EIGRP Metric Calculation
+    * Bandwidth (K1)
+      * Static
+    * Delay (K3)
+      * Static
+    * Reliability (K4 and K5)
+      * Dynamic
+    * Loading (K2)
+      * Dynamic
+    * MTU
+    * Formulas
+      * $Metric = (K1*BW+\dfrac{K2*BW}{256-load}+K3*delay)*\dfrac{K5}{reliability + K4}$
+        * $BW = {\dfrac{10^7}{BW}}$
+        * Delay=Delay in microseconds
+      * $Real (Default) Metric = 256*(Slowest_BW+All_Link_Delays)$
+        * $BW = {\dfrac{10^7}{BW}}$
+        * Delay=Delay in microseconds
+
+### EIGRP Lab
+
+#### EIGRP Base Configuration
