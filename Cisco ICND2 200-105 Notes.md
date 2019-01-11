@@ -44,7 +44,7 @@
         * A, B, C
         * Change Symbol to Computer
     * Route Cables Per the Scenario Parameters
-    * [Base Topology](images/baseTopology.png)
+    * ![Base Topology](images/baseTopology.png)
 
 ### Step 1: Base Config
 
@@ -76,7 +76,7 @@
     wr mem
     ```
   * Make your edits, and copy and past into the proper device.
-  * [Completion of Step 1 Topology](images/step1.png)
+  * ![Completion of Step 1 Topology](images/step1.png)
 
 ### Step 2: IP Addressing, Speed, and Duplex
 
@@ -135,7 +135,7 @@
         speed 100
         duplex full
       ```
-  * [Completion of Step 2](images/step2Completion.png)
+  * ![Completion of Step 2](images/step2Completion.png)
 
 ### Step 3: Enabling RIPv2 Routing
 
@@ -268,7 +268,7 @@
       * Select the group
         * Memories and disks
           * PCMCIA Size :4Mb
-* [Step 5 Diagram Changes](images/step5.png)
+* ![Step 5 Diagram Changes](images/step5.png)
 
 ### Step 6: Router on a stick and DHCP services
 
@@ -364,7 +364,7 @@
         ip nat inside source list NATTABLE interface s1/0 overload
     ```
   * sh ip nat translations
-* [Step 7 Changes](images/step7.png)
+* ![Step 7 Changes](images/step7.png)
 
 ### Step 8: Standard Access Lists
 
@@ -382,7 +382,7 @@
 
 ## Rebuilding ICND 1 Conclusion
 
-* At this point the top level overview review from ICND 1 has been completed. From this point forward all material discussed will be directly related to ICND 2. All review configs can be found [here](../ICND\ 1\ Review\ Configs).
+* At this point the top level overview review from ICND 1 has been completed. From this point forward all material discussed will be directly related to ICND 2. All review configs can be found ![here](../ICND\ 1\ Review\ Configs).
 
 ## Spanning Tree Protocol
 
@@ -462,10 +462,10 @@
 ### Will the Real Network Topology Step Forward
 
 * How to determine your network topology
-  * [Our Topology Demonstration](http://study-ccna.com/wp-content/uploads/2016/02/cisco_hierarchical_model.jpg)
+  * ![Our Topology Demonstration](http://study-ccna.com/wp-content/uploads/2016/02/cisco_hierarchical_model.jpg)
     * Lower left switch is our root bridge
     * All switches have a cost of 4
-    * [Root Port Election](images/Root\ Port.PNG)
+    * ![Root Port Election](images/Root\ Port.PNG)
     * 1 Designated Port, there can never be 2 Designated Port
       * 1 side is the Root Port, the other side is Designated port
       * Only one side of the connection gets blocked thus disabling the link
@@ -473,7 +473,7 @@
 ### Lab - Build, Configure, Test
 
 * Connecting the topology and discovering the root bridge in a random network
-  * [Network Topology](images/STP_lab_top.png)
+  * ![Network Topology](images/STP_lab_top.png)
 * Questions
     1. Ensure switches have a basic base configuration and connect as shown
     2. Use the proper show commands to determine the version of `STP running`, `port status`, and `identify` the `Root Bridge`
@@ -496,7 +496,7 @@
         1. 2 Seconds
             * Unlike Spanning tree which is passive, Rapid Spanning-tree is active, so it doesn't wait for the Listening and Learning Timers to expire
     5. Modify the bridge priority to elect SW1 as the Root Bridge, SW2 as the Backup Root: diagram port results and verify your assumptions are correct on the switch
-        1. [Updated Network Topology](images/STP_Elected_top.png)
+        1. ![Updated Network Topology](images/STP_Elected_top.png)
 * Intentionally selecting the root bridge
 * Verifying what you should know to be true
 
@@ -780,10 +780,10 @@
 * Bundling Instead of Blocking
   * How would STP handle the following situation
     * SPT would do the following
-      * [STP Breakdown](image/STP_Situation.png)
+      * ![STP Breakdown](image/STP_Situation.png)
     * SPT would block the ports on the unused link to ensure no loop was created.
   * Common EtherChange Options
-    * [Etherchannel Bundling](image/Eth_Bundle.png)
+    * ![Etherchannel Bundling](image/Eth_Bundle.png)
     * This Bundling takes Place at the **`ASIC`** level and allows for up to 8 connections to be bundled
       * Allows for 8 cables to be connected
       * Works best in groups of 2, 4, 8, not none binary numbers
@@ -795,7 +795,7 @@
       * Initially designed for directly connected switches only.
     * LAG - Link Aggregation Group
       * This can be used for servers, as well as many other devices not support this capability.
-      * [Etherchannel Lag](images/Eth_Lag.png)
+      * ![Etherchannel Lag](images/Eth_Lag.png)
   * There are two options for how to create Etherchannels
     * First Option is using a negotiation protocol
       * PAGP
@@ -818,7 +818,7 @@
 
 ### Lab - Configuring Etherchannel Bundles of Joy
 
-* [Lab Topology](images/Eth_Lab.png)
+* ![Lab Topology](images/Eth_Lab.png)
 * Configuring Etherchannel
     1. Beginning with a base configuration, set all ports as access ports in VLAN 1
     2. Configure Etherchannel on the interfaces between S2 and S3 using PAgP
@@ -915,7 +915,7 @@
 * Performing the Backup of the old IOS/Install of a new IOS
 
 1. Access the device shown in the picture
-    * [Lab Topology](images/IOS_Lab.png)
+    * ![Lab Topology](images/IOS_Lab.png)
 2. Backup the IOS to the TFTP server shown
     * ```text
       conf t
@@ -964,7 +964,7 @@
 
 * Understanding the Victor's Circle
   * `show ip route` - what do you see?
-  * [Demonstration Diagram](images/Routing_Reveal.png)
+  * ![Demonstration Diagram](images/Routing_Reveal.png)
   * [Packet Tracer](pktracer/Routing_Table_(does_not)_Reveal_All.pkt)
 * The Election Criteria
   * Criteria that must be considered
@@ -1036,7 +1036,7 @@
     * Multi Area - CCNP/IE
   * Doesn't use UDP or TCP - Stands Alone
 * How OSPF works (Much Better than RIP)
-  * [OSPF Diagram](images/ospf-overview.png)
+  * ![OSPF Diagram](images/ospf-overview.png)
   * OSPF Area Design and Terms
     * All Areas __must connect to area 0__
     * All __Routers in an area__ have the same __topology table__
@@ -1220,7 +1220,7 @@
 #### MultiArea OSPF Lab
 
 * Implement a Multiarea OSPF Network
-* [OSPF MultiArea Network Topology](images/ospf-multiarea.png)
+* ![OSPF MultiArea Network Topology](images/ospf-multiarea.png)
     1. Configure all routers shown to operate in a multiarea configuration. Tie, Belt, and Sock will act as ABRs.
     2. Add five (5) loopback interfaces to ring, Hat, and Shoe. They should be contiguous to existing area subnets.
     3. Add an Efficient summary route to area 1, 2, and 51. Verify impact on the routing table of other routers.
@@ -1314,7 +1314,7 @@
 #### EIGRP Base Configuration
 
 * Diving into EIGRP Configuration
-* [EIGRP Base Configuration Topology](images/EIGRP_Base_Config.png)
+* ![EIGRP Base Configuration Topology](images/EIGRP_Base_Config.png)
     1. Configure EIGRP Routing on all Routers in the autonomous system 90. Use network-specific wildcard masks at the lead office.
     2. Verify the impact of auto-summarization, then disable it.
     3. Introduce a manual summary route at the lead office. The more specific the route, the better tasting your eggs.
@@ -1346,14 +1346,14 @@
         * Provider Assigned
       * /48, /56, /64 Subnets assigned to Customers
 * The IPv6 Network Big Picture
-  * [IPv6: The Big Picture](images/IPv6_Big_Picture.png)
+  * ![IPv6: The Big Picture](images/IPv6_Big_Picture.png)
 
 ### IPv6 Routing Lab
 
 #### Configuring OSPFv3 Routing
 
 * Handling IPv6 Routing with OSPF
-* [IPv6 OSPFv3 Topology](images/OSPFv3_base_config.png)
+* ![IPv6 OSPFv3 Topology](images/OSPFv3_base_config.png)
 * Prompt:
   * Heavenly Beans is a wildly successful coffee house chain that promises 'a little piece of heave' with each cup of coffee. The IT department has chosen to use IPv6 addressing for all new regions moving forward. The most recent expansion to South Carolina will be the IPv6 pilot. Accomplish the following objectives:
       1. Perform IPv6 addressing of the shown network. Note: X = HQ Office Number, YY = Store Number
@@ -1364,7 +1364,7 @@
 #### Configuring EIGRP for IPv6
 
 * Configure EIGRP for IPv6 Routing for the Heavenly Beans Network
-* [IPv6 EIGRP Topology](images/OSPFv3_base_config.png)
+* ![IPv6 EIGRP Topology](images/OSPFv3_base_config.png)
 * Prompt:
   * Heavenly Beans has decided to move away from OSPFv3 in favor of EIGRP for IPv6.
       1. Remove the OSPFv3 configuration from all routing devices.
@@ -1456,9 +1456,52 @@
 #### Configuring a Point-to-Point WAN Connections
 
 * HDLC / PPP Live Lab
-* [Point-to-Point Links, Live Lab Topology](images/Point-to-point_topology.png)
+* ![Point-to-Point Links, Live Lab Topology](images/Point-to-point_topology.png)
     1. CConfigure the following network in its entirety using HDLC encapsulation for the 64Kbps WAN link. Use static routing to provision full Lilo-to-Stitch office connectivity.
     2. Convert the link to PPP encapsulation.
     3. Configure PPP PAP authentication between Lilo and Stitch. Use the appropriate debug commands to prove authentication is occurring.
     4. Convert to using PPP CHAP authentication.
     5. Add a second WAN link between Lilo and Stitch, also running at 64Kbps. Engage PPP Multilink to double the bandwidth between the two locations.
+* [HDLC / PPP Live Lab](pktracer\HDLC_PPP_config.pkt)
+
+### The WAN Evolution
+
+* Moving from leased lines to scalability
+  * Leased Lines (circuit Switched Technology)
+    * Inflexable
+    * Unused bandwidth
+    * Expensive
+  * Packet Switched (PVC)
+    * Virtual Circuit
+    * Each Packet is 'Destinationed'
+    * Not-as-expensive
+* Understanding packet switched networks
+  * X.25  (1976), Frame Relay, ATM, MPLS
+  * Virtual Circuits defined (PVC), Committed information rate (CIR) for each
+  * Unique Layer 2 address needed (Fills the MAC role)
+* The Future: MPLS, METROE, VPN
+  * Metro Ethernet - Fiber gone wild
+    * There a lot of Dark Fiber
+    * Transatlantic Fiber
+  * Multiprotocol Label Switching (MPLS)
+    * Moves them up from the physical layer to the data link layer
+    * Abstraction of the network layer
+  * Virtual Private Networks (VPN)...of the IPSEC type
+
+## Internet Technology
+
+### Cable and DSL
+
+* Understanding the technology fundamentals
+  * Internet Connection Options
+    * ISPs must connect to each other and to customers
+    * DSL and Cable were originally treated at home environments
+    * Copper cabling, repurposing spectrums
+    * Distance from the Central Office (CO) dictates Maximum Speeds
+    * Mostly asymmetric Connections
+      * One rate is more than another
+* The PPPoE Puzzle
+  * The Place of PPPoE
+    * DSL and Cable use a "Local Loop" Connections
+    * PPPoE adds authentication mechanisms to it
+    * Typically used by DSL, Passthrough or direct
