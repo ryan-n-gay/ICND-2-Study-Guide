@@ -1609,7 +1609,7 @@
 ### Understanding HSRP
 
 * Two is one, one is none
-  * ![Two is one, one is none](two-is-one.png)
+  * ![Two is one, one is none](images/two-is-one.png)
   * Redundancy is key
   * Better
     * This is the bet of the best scenarios.
