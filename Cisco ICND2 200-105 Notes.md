@@ -465,7 +465,7 @@
   * ![Our Topology Demonstration](http://study-ccna.com/wp-content/uploads/2016/02/cisco_hierarchical_model.jpg)
     * Lower left switch is our root bridge
     * All switches have a cost of 4
-    * ![Root Port Election](images/Root\ Port.PNG)
+    * ![Root Port Election](images/root-port.png)
     * 1 Designated Port, there can never be 2 Designated Port
       * 1 side is the Root Port, the other side is Designated port
       * Only one side of the connection gets blocked thus disabling the link
@@ -1505,3 +1505,149 @@
     * DSL and Cable use a "Local Loop" Connections
     * PPPoE adds authentication mechanisms to it
     * Typically used by DSL, Passthrough or direct
+
+### Internet Technology Lab: PPPoE Configuration
+
+* Configuring a PPPoE client connection
+    1. Configure the Neo router fa0/0 to connect to the ISP with a PPPoE DSL connection
+          * The Neo router should learn its public address dynamically
+          * User the Hostname "CBTNuggets" with a password of "IsQuiteFun" to authenticate
+    2. Configure a default route out the Dialer interface you create on your router
+    3. Use the proper show commands to verify the PPPoE connection is working
+    4. Ping 4.2.2.2 or 8.8.8.8 to test internet connectivity
+
+### VPN Solutions
+
+* Four Key VPN Objectives
+  * Confidentiality - Stopping prying eyes
+  * Authentication - Validate the identity
+  * Data Integrity - Preventing Change
+  * Anti-Replay - Eliminate Deja-vu
+* Understanding VPN Options
+  * Site-to-Site
+  * Client (Remote Access - IPSec)
+    * Administrative Burden that comes with Device management and client management
+  * SSLVPN
+  * DMVPN
+    * Dynamic Multipoint VPN
+* The Whole Point of GRE
+  * IPSec is Limited to IP-Based protocols and only unicast traffic
+  * RFC Generic Routing Encapsulation (GRE) Fixes that
+  * GRE by itself is unsecure; needs IPsec if used publicly
+  * DMVPN relies heavily on multipoint GRE tunnels
+
+### Internet Technology Lab: GRE Tunnel Implementation
+
+* GRE Configuration Live Lab
+  * Fish store 29 needs to get connected to the Corporate office. The new Fifi's Flopping Fish CIO is convinced that network security is a scam and would like to deploy unencrypted tunnel between Store 29 and the corporate offices. You must set up this tunnel and ensure routing is fully functional between the locations.
+  * ![GRE Tunnel Topology](images/gre-tunnel.png)
+      1. Implement a GRE tunnel between the Nemo and Eel routers using 192.168.1.0/24 subnet for internal IP addressing.
+      2. Configure OSPF routing between the two offices. OSPF should advertise the LAN and WIFI networks at store 29 to the corporate office; however, it should not send Hello messages out the LAN interfaces, OSPF communication should only occur within the GRE tunnel.
+      3. Verify you have achieved the objectives by confirming OSPF neighbor relationships and routing tables.
+* [GRE Tunnel Lab Packet Tracer](pktracer/gre-tunnel-lab.pkt)
+
+### CCNA Welcomes BGP
+
+* A Practical Description of BGP
+  * The Internet
+    * The ARPinet before the "Cloud"
+    * The Cloud of Clouds
+    * Clouds are autonomous systems.
+  * EGP (Exterior Gateway Protocol)
+    * BGP Only
+    * Untrusting
+    * Slow
+    * Penalty Box
+  * IGP (Interior Gateway Protocols)
+    * All other protocols
+    * Trustful
+    * Fast
+    * Builds Neighbors Quickly
+  * MPLS
+    * Allows you to make it feel as if you own the network.
+    * Some support
+      * OSPF
+      * EIGRP
+      * Opens them up to attack
+    * They form a BGP relationship instead
+* When should you NOT run BGP
+  * You Don't have "Beefy" Routers
+  * You're only connected to ONE External AS (ISP)
+  * You don't have enough bandwidth to receive updates
+  * You don't fully understand BGP
+* When should run BGP
+  * You need High-Availability through multiple ISPs
+  * You are a service Provider
+  * Large Networks with "DEMARC" points to other Divisions, Partners, or Service Providers
+* The BGP resume
+  * Reliable Updates (TCP-Based, Port 179)
+  * Batch Updates only (5 Seconds *Internal*, 30 seconds *External*)
+    * iBGP
+    * eBGP
+  * Complicated "Metric" for finding the best route
+  * All neighbors are manually set up
+  * Complex filters are typically used
+  * The routing Protocol of the Internet
+  * Management of Trust and Untrust
+  * Routing through autonomous systems instead of routers
+  * The slowest routing protocol in the world
+  * Primarily Service Provider, but also Enterprise Customer
+
+### Internet Technology Lab: Basic BGP Configuration
+
+* Configuring a BGP Neighbor and Advertise routes
+  * The MAX Corporation has decided to bring up redundant connectivity for their corporate office to ensure their email and web hosting services are resilient should the connection to their primary ISP fail. They would like to test BGP with their primary ISP before entering into a long term agreement with the secondary provider.
+  * ![BGP Lab Topology](images/bgp_lab_topology.png)
+      1. Configure BGP for the MAX organization in AS 5000.
+      2. Establish a neighbor relationship between the MAX and ISP routers. The ISP is running in AS 2500. Confirm the MAX router is receiving BGP routers from the ISP.
+      3. Advertise the 63.1.5.0/24 network owned by MAX via BGP to the ISP router. Advertise a summary route to 63.2.0.0/16 to the ISP (class B address MAX acquired after a hostile take over of the MIN organization).
+      4. Configure the ISP to advertise a default router to MAX.
+  * [BGP Lab Packet Tracer](pktracer/bgp-config.pkt)
+
+## Infrastructure Services
+
+### Understanding HSRP
+
+* Two is one, one is none
+  * ![Two is one, one is none](two-is-one.png)
+  * Redundancy is key
+  * Better
+    * This is the bet of the best scenarios.
+  * Hardware Redundancy
+  * Route Redundancy
+* FHRP Options
+  * First Hop Redundancy Protocol
+  * Creates a virtual .1 IP address
+  * Hello messages are sent every 3 seconds
+  * HSRP
+    * Creates a shared virtual Mac address as well
+    * GARP
+      * Gratuitous Arp
+  * Understanding and Comparing the FHRP Players
+    * Common Ground:
+      * Redundancy Focus
+      * Virtual IP and MAC
+      * Keep
+    * HSRP Unique Features
+      * V1: 0000.0c07.ac--
+        * Seconds
+        * 256 HSRP Groups
+          * Group = Set of 2 or more devices
+      * V2: 0000.0c9f.f---
+        * msec
+        * 4096 HSRP groups
+      * Created in 1994
+      * Works for Routers and Layer 3 switches
+      * V1 and V2 are not compatible
+    * VRRP and GLBP unique features
+      * Virtual Router Redundancy Protocol
+        * Created in 1999
+        * Multi Vender Eco system
+        * Default hello timers
+        * 1 second dead after 3
+        * Assign the 1 IP address to multiple devices
+      * Gateway Load Balancing Protocol
+        * Released in 2005
+        * Cisco Proprietary
+        * Creates two virtual mac address and shares them between the two devices
+* Key HSRP concepts
