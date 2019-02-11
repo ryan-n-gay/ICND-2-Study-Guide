@@ -1651,3 +1651,13 @@
         * Cisco Proprietary
         * Creates two virtual mac address and shares them between the two devices
 * Key HSRP concepts
+
+### Infrastructure Services Lab: Configuring HSRP
+
+* Configuring and testing HSRP Failover
+  * Squid Shack implements Point of Sale (POS) terminals in each of their stores. If these terminals are unable to reach their parent server at Squid Shack Corporate offices, squid sales cannot be processed potentially causing an untimely end of hundreds of squid. Ensure the routers at each location are configured for failover for the most redundant of possible configuration.
+  * ![HSPR Lab Topology](images/)
+      1. Verify configuration. Ensure Squid Shack store /  Corporate routers have correct routing information/
+      2. Configure HSRPv2 at both locations where SQ1 and SQ# are the primary routers. User the .1 IP address as the virtual IP.
+      3. Configure HSRP so SQ1 and SQ3 regain primary router status should failover occur.
+      4. Verify HSRP is working correctly using show commands. Perform a live failover test to reassure Squid Shack of the network stability.
