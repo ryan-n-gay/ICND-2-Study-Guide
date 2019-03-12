@@ -127,8 +127,7 @@
       int vlan 1
         no shutdown
         ip address 10.24.0.13 255.255.255.0
-        exit
-    ```
+        exit ```
   * Configure the Speed, and Duplex for local office
     * ```text
       int f0/0
@@ -1468,7 +1467,7 @@
 
 * Moving from leased lines to scalability
   * Leased Lines (circuit Switched Technology)
-    * Inflexable
+    * Inflexible
     * Unused bandwidth
     * Expensive
   * Packet Switched (PVC)
@@ -1656,8 +1655,136 @@
 
 * Configuring and testing HSRP Failover
   * Squid Shack implements Point of Sale (POS) terminals in each of their stores. If these terminals are unable to reach their parent server at Squid Shack Corporate offices, squid sales cannot be processed potentially causing an untimely end of hundreds of squid. Ensure the routers at each location are configured for failover for the most redundant of possible configuration.
-  * ![HSPR Lab Topology](images/)
+  * ![HSPR Lab Topology](images/hsrp-lab-topology.png)
       1. Verify configuration. Ensure Squid Shack store /  Corporate routers have correct routing information/
       2. Configure HSRPv2 at both locations where SQ1 and SQ# are the primary routers. User the .1 IP address as the virtual IP.
       3. Configure HSRP so SQ1 and SQ3 regain primary router status should failover occur.
       4. Verify HSRP is working correctly using show commands. Perform a live failover test to reassure Squid Shack of the network stability.
+  * [HSRP Lab Packet Tracer](pktracer/HSRP-lab-config.pkt)
+
+### Understanding the QoS Dilemma
+
+* A type of life insurance ( or life protection )
+  * **Not all traffic is created equal**
+* The ability to Dictate traffic treatment
+  * Prioritization
+  * Shaping / Policing
+  * Advanced Strategies ( WRED )
+* Strategies to Fight the enemy
+  * Delay
+  * Jitter
+    * "Delay Variation"
+  * Packet Loss
+
+### QoS Tools
+
+* What's My Target
+  * Auto Requirements
+    * Jitter: < 30 ms
+    * Delay: < 150 ms
+    * Loss: < 1%
+    * QoS: DSCP EF
+      * Marking
+    * Bandwidth: Little
+  * Video Requirements
+    * Jitter: < 30 ms
+    * Delay: < 150 ms
+    * Loss: < 1%
+    * QoS: DSCP AF41
+      * Marking
+    * Bandwidth: Lots
+  * Data Traffic:
+    * Mission Critical
+    * Transactional
+    * Best Effort
+    * Scavenger
+* QoS Tools
+  * Methods Available
+    * Classification and Marking
+      * NBAR - Deep Inspection
+        * ToS -Type of Service
+        * CoS - Class of Service
+    * Queuing ( Congestion Management )
+    * Congestion Avoidance
+    * Shaping and Policing
+      * sHAPING Smoothing out the traffic you want
+      * Policing - Cuts it off the traffic you don't want
+  * Understanding Trust Boundary
+    * ![Trust Boundary Best Practices](images/trust_boundary.png)
+        1. Best
+              * Ability to mark its own traffic if it's a Cisco Phone
+              * Uses CDP to detect the device type
+              * Can mark the phone traffic
+              * Can mark the user traffic as well
+        2. Better
+              * Adds more hands
+        3. Good
+              * Puts a lot of strain on your router
+* Queuing Strategies
+  * Weighted Fair Queuing (WFQ) - Low traffic senders get priority over high traffic senders
+  * Class Based WFQ - Divides bandwidth among classes that you define
+    * Used for Data traffic
+  * Low Latency Queuing (LLQ) - Combo of CB-WFQ, but adds a strict priority element
+    * VoIP
+* Trust Boundary
+
+### RADIUS and TACACS+
+
+* AAA is not just for flat tires
+  * What is AAA? What Can It control?
+    * Authentication - Validates WHO you are
+      * SSH
+      * VPN Access
+      * PPP Links
+      * AUX Access
+      * Console Access
+      * Telnet
+      * Dialup Modems
+    * Authorization - Tells what you can DO
+      * Multiple Privilege Modes
+    * Accounting - Tracks what you DID
+  * The Authentication Street Fighters: Radius and Tacacs+
+    * Tacacs+
+      * Cisco Proprietary
+      * Command-by-command authorization
+        * Cisco ACS Server
+      * Packet fully encrypted
+      * Normally used for Network Devices
+    * Radius
+      * Industry Standard ( RFC 2865 )
+      * Only Password Encrypted
+      * Normally used for user auth
+* Understanding the place of Radius and Tacacs
+
+### Infrastructure Services Lab: Configuring Extended ACLs
+
+* Hone your Extended ACL skills through three exercises
+* ![Extended ACL Topology](images/e_acl_top.png)
+  * Scenario 1: Block 192.168.2.0/25 from reaching 192.168.1.0/24 using an Extended ACL.
+  * Scenario 2: Block Telnet and SSH traffic originating from 192.168.1.0/24 form reaching 192.168.2.128/25.
+  * Scenario 3: On R2, block all HTTP traffic coming in from the 192.168.2.128/25 offices.
+* [Extended ACL Lab](pktracer/extended_acl_lab.pkt)
+
+## Monitoring Tools
+
+### Understanding IP SLA
+
+* Understanding the purpose of IP SLA
+  * What IS IP SLA?
+    * Technically: A Contract with a service Level Guarantee
+    * In Cisco: A Method of Measuring Service Level by sending test traffic
+    * Able to Measure:
+      * Network Delay
+      * Packet Loss
+      * Jitter
+      * Voice Quality
+* Things you can do with IP SLA
+  * Other IP SLA Notes
+    * Measuring with IP SLA can be taken directly to a device (Server, Router, ETC...) or into an IP SLA responder
+    * Monitor IP SLA using SNMP/SNMP Trap Capable
+    * Supports QoS marking with DSCP
+      * Differentiate Services Code Point
+    * Most commonly measured metrics: Jitter and Packet Loss
+
+### Monitoring Tools Lab: Configuring IP SLA
+
