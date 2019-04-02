@@ -1788,3 +1788,46 @@
 
 ### Monitoring Tools Lab: Configuring IP SLA
 
+* Implementing IP SLA Between Endpoints
+* ![IP SLA Lab Topology](images/ip_sla_topology.png)
+  * Super Mario Plush Inc. has implemented redundant connections between the HQ and outlet stores. Mr. Mario himself has expressed his distrust in routing protocols and has directed that only static routing (yet to be implemented) between offices is resilient and adjusts the routing table based on a failed WAN connection.
+      1. Implement IP SLA ICMP probes between the two locations for each WAN connection.
+      2. (beyond CCNA) Configure static routing in such a way that it uses SLA results to use only valid paths for communication.
+      3. (beyond CCNA) Test your results by disabling one of the connections and ensuring failover occurs.
+
+### SNMP Concepts
+
+* The Place and Purpose of SNMP
+  * The Puzzle Pieces of SNMP
+    * Process Overview
+      * Monitored Deceives
+      * SNMP V1, V2c, V3
+      * MIB / OIDs
+      * Monitoring Server
+      * Output
+      * IT Admin
+    * Version Differences
+    * Community Strings (RO/RW)
+* SNMP Versions
+  * SNMP V1
+    * Allowed for community String monitoring of device.
+  * SNMP V2C
+    * Expanded upon SNMP V1 and allowed for 32 bit and 64 bit monitoring for faster speeds.
+  * SNMP V3
+    * Allowed for Encrypted commination with the monitoring server.
+
+### Monitoring Services Lab: SNMP Configuration
+
+* Setting up a monitored network environment
+* ![SNMP Lab Topology](images/snmp_lab_topology.png)
+  * You are a consultant for iT LLC (Making IT Cool Again). You have to implement a small office network with a router and switch and must now implement SNMP monitoring. Due to size, the PRTG 100 Free platform will suffice. Accomplish the following:
+      1. Implement SNMPv2 monitoring for the Cisco Switch. Add the following sensors: Ping, CPU, Free Memory, Uptime, and Bandwidth monitoring for all active interfaces.
+      2. Implement SNMPv3 monitoring for the Cisco Router. Use Auto Discovery to add common monitoring elements.
+
+### Monitoring Services Lab: Understanding and Configuring SPAN
+
+* Understanding the place of SPAN
+  * Local SPAN: Selectively "Port" Traffic from select interfaces
+  * Combine with Wireshark wizardry for advanced troubleshooting
+* Configuring SPAN on a Cisco Device
+  * `monitor session <SPAN ID>`
