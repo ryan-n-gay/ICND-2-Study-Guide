@@ -1831,3 +1831,56 @@
   * Combine with Wireshark wizardry for advanced troubleshooting
 * Configuring SPAN on a Cisco Device
   * `monitor session <SPAN ID>`
+
+### Defining Software Defined Networking (SDN)
+
+* What is SDN?
+  * The next step beyond "Traditional Network Infrastructure"
+    * Each device managed and controlled by its own processes
+    * Limited central control
+    * Wireless Controller
+  * A New world of Network Programmability (Another name for SDN)
+    * Software, Central control of the network
+    * Adapts to an ever-changing environment
+    * Massive Topic (CCNA Intro)
+* Dissecting a Network Device
+  * Three Planes of existence
+    * Data Plane
+    * Control Plane
+    * Management Plane
+  * Every Device has its own control/data plane
+  * SDN Moves the control and management planes to a centralized, software controller
+* Northbound and Southbound Interfaces
+  * Not physical interfaces on a device; SDN Concept
+  * Southbound Interface (SBI) represents communication between controller and device
+  * Northbound interface (NBI) represents communication between controller and outside programs
+
+### How Cisco Does SDN
+
+* The SDN World as we know it
+  * Currently an Olympic race of many runners to the perfect controller
+    * Duplicating efforts
+    * Core feature definition needed
+  * OpenDaylight (ODL) Now exists as a Linux Foundation Project
+    * Backed by many vendors
+    * Contains many built-in SBIs
+  * Cisco has adopted ODL and created Cisco Open SDN Controller (OSC)
+* How Cisco does SDN
+  * "Traditional" SDN
+    * Cisco Open SDN Controller (OSC)
+    * Supported by a few Nexus Switches / Cisco ASR Router
+    * OpenFlow integrations / Support
+  * Application Centric Infrastructure (ACI)
+  * Data Center SDN
+  * Application Focus (Mostly VM)
+  * Uses application policy infrastructure controller (APIC)
+* APIC Enterprise Module (APIC-EM)
+* The SDN Hybrid: APIC-EM
+  * Redefines SDN (Hybrid Model) by keeping control plane in devices
+    * Northbound interfaces still allows outside integration
+    * Devices controlled via telnet, ssh, SNMP
+  * Allows for expansion through installable apps
+    * Created by different Cisco groups
+    * Appear as integrated sections in APIC-EM
+  * Path Trace APP
+  * Path Trace ACL Analysis tool
