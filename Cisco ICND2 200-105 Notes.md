@@ -75,6 +75,7 @@
     exit
     wr mem
     ```
+
   * Make your edits, and copy and past into the proper device.
   * ![Completion of Step 1 Topology](images/step1.png)
 
@@ -418,7 +419,7 @@
   * Created in 1993
   * takes 30-50 seconds to remove the block, and rebuild the connectivity
   * time based
-* Per-VLOAN Spanning Tree (PVST)
+* Per-VLAN Spanning Tree (PVST)
   * Cisco Proprietary
 * Rapid Spanning Tree (RSTP - 802.1w)
   * Takes 2 seconds to remove the block
@@ -1878,7 +1879,7 @@
 * The SDN Hybrid: APIC-EM
   * Redefines SDN (Hybrid Model) by keeping control plane in devices
     * Northbound interfaces still allows outside integration
-    * Devices controlled via telnet, ssh, SNMP
+    * Devices controlled via telnet, ssh, snmp
   * Allows for expansion through installable apps
     * Created by different Cisco groups
     * Appear as integrated sections in APIC-EM
